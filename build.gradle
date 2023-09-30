@@ -1,5 +1,6 @@
 plugins {
     id "java"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 version = "0.0.1"
@@ -25,6 +26,12 @@ dependencies {
 
     testImplementation platform("org.junit:junit-bom:5.9.1")
     testImplementation "org.junit.jupiter:junit-jupiter"
+}
+
+shadowJar {
+    archiveFileName = "Circe-${version}.jar"
+
+    relocate("net.objecthunter.exp4j", "eu.jasperlorelai.circe.shaded.exp4j")
 }
 
 test {

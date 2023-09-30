@@ -1,9 +1,10 @@
-import eu.jasperlorelai.circe.Circe;
+import eu.jasperlorelai.circe.parser.Parser;
 
 public class Program {
 
 	public static void main(String[] args) {
-		System.out.println(Circe.parse(String.join(" ", args)));
+		String code = String.join(" ", args);
+		System.out.println(new Parser().parse(code));
 	}
 
 }
