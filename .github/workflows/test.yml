@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 jobs:
   test:
-    name: 🚀 Deploy
+    name: 🚀 Test
     runs-on: ubuntu-latest
     steps:
       - name: 🚚 Get latest code

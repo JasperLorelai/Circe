@@ -1,18 +1,28 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     id "java"
+    id "maven-publish"
     id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
-version = "0.0.1"
+version = "0.1.1"
 group = "eu.jasperlorelai.circe"
 
 java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+}
+
+wrapper {
+    gradleVersion = "8.4"
+    setDistributionType(Wrapper.DistributionType.ALL)
 }
 
 jar {
     manifest {
-        attributes["Main-Class"] = "Program"
+        attributes "Main-Class": "Program"
     }
 }
 
@@ -24,16 +34,31 @@ dependencies {
     implementation "net.objecthunter:exp4j:0.4.8"
     implementation "org.jetbrains:annotations:24.0.0"
 
-    testImplementation platform("org.junit:junit-bom:5.9.1")
-    testImplementation "org.junit.jupiter:junit-jupiter"
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+tasks.named("shadowJar", ShadowJar) {
+    enableRelocation true
+    relocationPrefix "eu.jasperlorelai.circe.shaded"
 }
 
 shadowJar {
-    archiveFileName = "Circe-${version}.jar"
+    archiveClassifier.set("")
+}
 
-    relocate("net.objecthunter.exp4j", "eu.jasperlorelai.circe.shaded.exp4j")
+artifacts {
+    archives shadowJar
 }
 
 test {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
 }
